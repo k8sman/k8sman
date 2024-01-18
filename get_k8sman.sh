@@ -57,7 +57,7 @@ verifySupported() {
 
 # downloadFile downloads the latest binary package.
 downloadFile() {
-  K8SMAN_DIST="k8sman-${OS}-${ARCH}-871c1f85.tar.gz"
+  K8SMAN_DIST="k8sman-${OS}-${ARCH}-910dd21b.tar.gz"
   DOWNLOAD_URL="https://github.com/k8sman/k8sman/releases/latest/download/$K8SMAN_DIST"
   K8SMAN_TMP_ROOT="$(mktemp -dt k8sman-installer-XXXXXX)"
   K8SMAN_TMP_FILE="$K8SMAN_TMP_ROOT/$K8SMAN_DIST"
