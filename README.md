@@ -18,7 +18,7 @@ The k8sman installation process is similar to that of Helm, using a Bash script 
 1. **Download the Installation Script**:
    Use the provided URL to download the installation script. For example:
    ```
-   curl -fsSL -o get_k8sman.sh https://k8sman-installation-url.com/get-k8sman.sh
+   curl -fsSL -o get_k8sman.sh https://raw.githubusercontent.com/k8sman/k8sman/main/get_k8sman.sh
    ```
 
 2. **Make the Script Executable**:
@@ -32,7 +32,7 @@ The k8sman installation process is similar to that of Helm, using a Bash script 
    ```
    Alternatively, for a more direct approach:
    ```
-   curl https://k8sman-installation-url.com/get-k8sman.sh | bash
+   curl https://raw.githubusercontent.com/k8sman/k8sman/main/get_k8sman.sh | bash
    ```
 
 ## Post-Installation Steps
