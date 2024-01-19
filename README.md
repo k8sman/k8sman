@@ -37,13 +37,78 @@ The k8sman installation process is similar to that of Helm, using a Bash script 
 
 ## Post-Installation Steps
 
-After installing k8sman, the following steps are recommended:
+### Starting the Local Server and Connecting to a Cluster
 
-- **Install k8sman-agent**: Deploy k8sman-agent in your Kubernetes cluster. Installation instructions can be found in the `k8sman-agent` repository.
-- **Use k8sman-helm-chart**: For setting up k8sman in your cluster efficiently, refer to the `k8sman-helm-chart` repository.
-- **Consult k8sman-docs**: For comprehensive documentation and troubleshooting tips, visit the `k8sman-docs`.
-- **Explore k8sman-examples**: To understand practical use cases and examples, check out `k8sman-examples`.
+To connect to a specific Kubernetes cluster, use the `connect` command:
 
-## Conclusion
+```sh
+k8sman connection connect <cluster-name>
+```
 
-k8sman is a robust tool that enhances Kubernetes cluster management when used in conjunction with other components of the k8sman platform. For further information and support, visit the [k8sman GitHub repository](https://github.com/k8sman/k8sman).
+Replace `<cluster-name>` with the name of your Kubernetes cluster. This command initializes a local HTTP server that interacts with the `k8sman-agent` and creates a `kubeconfig` file in your user's `.kube` directory. This file is necessary for `kubectl` to communicate with the Kubernetes cluster through the `k8sman`.
+
+## Configuration Attributes
+
+The following table lists the configurable attributes for `k8sman` and their descriptions. For a basic initial setup, it is necessary to configure only `rabbitmq-host`, `rabbitmq-user`, `rabbitmq-pass`, and `rabbitmq-vhost`. The other attributes can be left at their default values unless specific changes are needed.
+
+| Attribute            | Description                                           | Example Value                  |
+|----------------------|-------------------------------------------------------|--------------------------------|
+| `rabbitmq-host`      | Host of the RabbitMQ server                           | `<host>`                       |
+| `rabbitmq-user`      | Username for RabbitMQ                                 | `<user>`                       |
+| `rabbitmq-pass`      | Password for RabbitMQ                                 | `<password>`                   |
+| `rabbitmq-vhost`     | Virtual Host for RabbitMQ                             | `<vhost>`                      |
+| `queue-commands`     | Name of the commands queue in RabbitMQ                | `commands` (default)           |
+| `queue-responses`    | Name of the responses queue in RabbitMQ               | `responses` (default)          |
+| `enable-tls`         | Enable TLS for secure communication                   | `true` (default)               |
+| `rabbitmq-tls-port`  | TLS port of the RabbitMQ server                       | `5671` (default for cloud services) |
+
+To configure these attributes, use the `config` command followed by the specific flags. For example:
+
+```sh
+k8sman connection create <name> \
+    --rabbitmq-host <host> \
+    --rabbitmq-user <user> \
+    --rabbitmq-pass <pass> \
+    --rabbitmq-vhost <vhost> \
+    --secret <secret> 
+
+```
+
+Note: The TLS port `5671` is commonly used for cloud-based RabbitMQ services, but it might vary based on your specific RabbitMQ setup. The default values for `queue-commands`, `queue-responses`, and `enable-tls` are typically suitable for most configurations.
+
+## All Commands
+
+### Connect to a Cluster
+```
+k8sman connection connect <name>
+```
+- Description: Initializes a local server and connects to a specified Kubernetes cluster, generating a `kubeconfig` file for seamless integration with `kubectl`.
+
+### Create a New Connection
+```
+k8sman connection create <name> \
+    --rabbitmq-host <host> \
+    --rabbitmq-user <user> \
+    --rabbitmq-pass <pass> \
+    --rabbitmq-vhost <vhost> \
+    --secret <secret>
+```
+- Description: Creates a new connection with a specified agent, configuring connection details such as RabbitMQ host, user, password, virtual host, and secret.
+
+### Update an Existing Connection
+```
+k8sman connection update <name> [...]
+```
+- Description: Updates an existing connection with a specified agent, allowing changes to settings such as RabbitMQ host, user, password, virtual host, secret, etc.
+
+### Delete a Connection
+```
+k8sman connection delete <name>
+```
+- Description: Deletes an existing connection with a specified agent, removing it from the configuration file.
+
+### List Available Connections
+```
+k8sman connection list
+```
+- Description: Lists all available connection configurations, displaying agent names and their associated settings.
