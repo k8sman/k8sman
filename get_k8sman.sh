@@ -2,9 +2,11 @@
 
 : ${BINARY_NAME:="k8sman"}
 : ${K8SMAN_INSTALL_DIR:="/usr/local/bin"}
+: ${GITHUB_REPO:="k8sman/k8sman"}
 
 HAS_CURL="$(type "curl" &> /dev/null && echo true || echo false)"
 HAS_WGET="$(type "wget" &> /dev/null && echo true || echo false)"
+
 
 # initArch discovers the architecture for this system.
 initArch() {
@@ -57,9 +59,9 @@ verifySupported() {
 
 # downloadFile downloads the latest binary package.
 downloadFile() {
-  K8SMAN_DIST="k8sman-${OS}-${ARCH}-910dd21b.tar.gz"
+  K8SMAN_DIST="k8sman-${OS}-${ARCH}.tar.gz"
   DOWNLOAD_URL="https://github.com/k8sman/k8sman/releases/latest/download/$K8SMAN_DIST"
-  K8SMAN_TMP_ROOT="$(mktemp -dt k8sman-installer-XXXXXX)"
+  K8SMAN_TMP_ROOT="$(mktemp -dt k8sman-installer)"
   K8SMAN_TMP_FILE="$K8SMAN_TMP_ROOT/$K8SMAN_DIST"
   echo "Downloading $DOWNLOAD_URL"
   if [ "${HAS_CURL}" == "true" ]; then
@@ -74,9 +76,9 @@ installFile() {
   K8SMAN_TMP="$K8SMAN_TMP_ROOT/$BINARY_NAME"
   mkdir -p "$K8SMAN_TMP"
   tar xf "$K8SMAN_TMP_FILE" -C "$K8SMAN_TMP"
-  K8SMAN_TMP_BIN="$K8SMAN_TMP/$OS-$ARCH/$BINARY_NAME"
   echo "Preparing to install $BINARY_NAME into ${K8SMAN_INSTALL_DIR}"
-  runAsRoot cp "$K8SMAN_TMP_BIN" "$K8SMAN_INSTALL_DIR/$BINARY_NAME"
+  chmod +x $K8SMAN_TMP/$BINARY_NAME-$OS-$ARCH
+  runAsRoot cp "$K8SMAN_TMP/$BINARY_NAME-$OS-$ARCH" "$K8SMAN_INSTALL_DIR/$BINARY_NAME"
   echo "$BINARY_NAME installed into $K8SMAN_INSTALL_DIR/$BINARY_NAME"
 }
 
