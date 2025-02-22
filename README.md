@@ -32,8 +32,33 @@ K8sman is a professional-grade command-line interface (CLI) designed for managin
    ```
    Or run it directly from the URL:
    ```bash
-   curl https://raw.githubusercontent.com/k8sman/k8sman/main/get_k8sman.sh | bash
+   curl -sL "https://raw.githubusercontent.com/k8sman/k8sman/main/get_k8sman.sh" | bash
    ```
+
+### Install a Specific Version
+
+By default, the installation script fetches the latest version of K8sman. However, if you need to install a specific version, you can do so by passing the `VERSION` variable while executing the script.
+
+#### **Example:** Installing version `0.1.2-alpha`
+
+```bash
+curl -sL "https://raw.githubusercontent.com/k8sman/k8sman/main/get_k8sman.sh" | VERSION="0.1.2-alpha" bash
+```
+
+#### **Why is the `VERSION` variable used this way?**
+If you try to set `VERSION` before running `curl`, like this:
+```bash
+VERSION="0.1.2-alpha" curl -sL "https://raw.githubusercontent.com/k8sman/k8sman/main/get_k8sman.sh" | bash
+```
+this won’t work because the variable is only available for `curl`, not for the script executed by `bash`.
+
+Instead, the correct way is to pass `VERSION` **inside** the `bash` execution, so it is available during the script’s runtime:
+```bash
+curl -sL "https://raw.githubusercontent.com/k8sman/k8sman/main/get_k8sman.sh" | VERSION="0.1.2-alpha" bash
+```
+This ensures that the script properly downloads and installs the requested version.
+
+---
 
 ### Verify Installation
 
@@ -78,6 +103,14 @@ k8sman context add \
 - **--api-server**: The Kubernetes API server URL (uses the proxy server URL if omitted).  
 - **--cluster**: An optional custom name for the cluster. If provided, it becomes your active context.
 
+#### **Update to the Latest Version**
+
+You can update K8sman to the latest version using:
+```bash
+k8sman update
+```
+This command fetches the latest release from GitHub, downloads the appropriate binary, and replaces the existing installation.
+
 ---
 
 ## Example Workflow
@@ -90,6 +123,11 @@ k8sman context add \
 2. **Add a Context for Your Cluster:**  
    ```bash
    k8sman context add --token C983...TAHwo8Q --cluster my-cluster-1
+   ```
+
+3. **Update K8sman to the Latest Version:**
+   ```bash
+   k8sman update
    ```
 
 ---
