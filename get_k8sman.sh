@@ -57,13 +57,22 @@ verifySupported() {
   fi
 }
 
-# downloadFile downloads the latest binary package.
+# downloadFile downloads the binary package (latest or specific version).
 downloadFile() {
   K8SMAN_DIST="k8sman-${OS}-${ARCH}.tar.gz"
-  DOWNLOAD_URL="https://github.com/k8sman/k8sman/releases/latest/download/$K8SMAN_DIST"
+
+  if [ -n "$VERSION" ]; then
+    DOWNLOAD_URL="https://github.com/k8sman/k8sman/releases/download/${VERSION}/${K8SMAN_DIST}"
+    echo "Downloading specific version: ${VERSION}"
+  else
+    DOWNLOAD_URL="https://github.com/k8sman/k8sman/releases/latest/download/$K8SMAN_DIST"
+    echo "Downloading latest version"
+  fi
+
   K8SMAN_TMP_ROOT="$(mktemp -dt k8sman-installer)"
   K8SMAN_TMP_FILE="$K8SMAN_TMP_ROOT/$K8SMAN_DIST"
   echo "Downloading $DOWNLOAD_URL"
+
   if [ "${HAS_CURL}" == "true" ]; then
     curl -SsL "$DOWNLOAD_URL" -o "$K8SMAN_TMP_FILE"
   elif [ "${HAS_WGET}" == "true" ]; then
